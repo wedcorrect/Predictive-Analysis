@@ -1,0 +1,7 @@
+psycopg2
+sqlalchemy
+pydantic
+pydantic-settings
+pandas
+numpy
+collection

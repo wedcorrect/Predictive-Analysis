@@ -1,6 +1,7 @@
 from datetime import date, timedelta
 from team_analysis import team_analysis_flow, except_messgs, pred_count
 from ref_analysis import ref_analysis_flow, refexcept_messgs
+from ml_predict import ml_predictor
 from config import settings
 import smtplib, os
 from email.message import EmailMessage
@@ -60,6 +61,8 @@ def main():
             smtp.login(settings.email_address, settings.email_password)
             smtp.send_message(msg_1)
             smtp.send_message(msg_2)
+    
+    ml_predictor(today, today)
 
 
 if __name__ == '__main__':

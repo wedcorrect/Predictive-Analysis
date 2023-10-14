@@ -5,6 +5,8 @@ from config import settings
 
 
 #https://github.com/wedcorrect/Predictive-Analysis/raw/main/app/ml_models/awayscore_predictor.pkl
+
+
 homescore_predictor = joblib.load(settings.homescore_predictor)# '/app/ml_models/homescore_predictor.pkl')
 awayscore_predictor = joblib.load(settings.awayscore_predictor)# '/app/ml_models/awayscore_predictor.pkl')
 outcome_predictor = joblib.load(settings.outcome_predictor)# '/app/ml_models/outcome_predictor.pkl')

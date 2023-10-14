@@ -123,6 +123,7 @@ def ml_predictor(today, yesterday):
 
         finalselected_columns = ['Date','Time','Home_Team','Away_Team','match_links','league','predicted_scores','predicted_outcome']
         final_df = today_df[finalselected_columns]
+        final_df.columns = ['date','time','hometeam','awayteam','match_links','league','predicted_scores','predicted_outcome']
         stats_loader(final_df, 'match_ml_predictions')
 
 

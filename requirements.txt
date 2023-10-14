@@ -6,4 +6,4 @@ pandas
 numpy
 collection
 joblib
-sklearn
+scikit-learn

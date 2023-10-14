@@ -8,6 +8,9 @@ class Settings(BaseSettings):
     database_password: str
     email_address: str
     email_password: str
+    homescore_predictor: str
+    awayscore_predictor: str
+    outcome_predictor: str
 
 
     class Config:

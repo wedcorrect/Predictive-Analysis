@@ -3,9 +3,11 @@ import psycopg2, joblib
 from sqlalchemy import create_engine
 from config import settings
 
-homescore_predictor = joblib.load('/app/ml_models/homescore_predictor.pkl')
-awayscore_predictor = joblib.load('/app/ml_models/awayscore_predictor.pkl')
-outcome_predictor = joblib.load('/app/ml_models/outcome_predictor.pkl')
+
+#https://github.com/wedcorrect/Predictive-Analysis/raw/main/app/ml_models/awayscore_predictor.pkl
+homescore_predictor = joblib.load(settings.homescore_predictor)# '/app/ml_models/homescore_predictor.pkl')
+awayscore_predictor = joblib.load(settings.awayscore_predictor)# '/app/ml_models/awayscore_predictor.pkl')
+outcome_predictor = joblib.load(settings.outcome_predictor)# '/app/ml_models/outcome_predictor.pkl')
 
 def first_conversion(element):
     convert = element.split('/')

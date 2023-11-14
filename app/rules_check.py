@@ -302,4 +302,4 @@ def rules_check():
                 rulecheck_loader(prediction)
                 break
             except Exception as e:
-                rulesexcept_messgs[f"(Data Extraction)"] = f"{type(e).__name__}: {e}"
+                rulesexcept_messgs[f"(Data Loading)"] = f"{type(e).__name__}: {e}"

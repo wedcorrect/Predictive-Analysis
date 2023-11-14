@@ -1,6 +1,7 @@
 from datetime import date, timedelta
 from team_analysis import team_analysis_flow, except_messgs, pred_count
 from ref_analysis import ref_analysis_flow, refexcept_messgs
+from rules_check import rules_check, rulesexcept_messgs
 from ml_predict import ml_predictor
 from config import settings
 import smtplib, os
@@ -19,6 +20,7 @@ def main():
     if (today.day % 2) == 0:
         team_analysis_flow(today, tomorrow)
         ref_analysis_flow(today, tomorrow)
+        rules_check()
 
         #Concatenating error logs to send to email.
         email_1 = f"Error Logs for {today} and {tomorrow} Analysis.\n\n"
@@ -57,10 +59,26 @@ def main():
         msg_2['To'] = "dexterhardeveld@live.nl"
         msg_2.set_content(email_2)
 
+        #Concatenating error logs to send to email.
+        email_3 = f"Error Logs for {today} and {tomorrow} Rules_Check.\n\n"
+        for item in list(rulesexcept_messgs.keys()):
+            if item == list(rulesexcept_messgs.keys())[-1]:
+                email_3 = email_3 + f"{item}: {rulesexcept_messgs[item]}\n\n"
+            else:
+                email_3 = email_3 + f"{item}: {rulesexcept_messgs[item]}\n"
+        
+        #Sends error message to Email for recording or review
+        msg_3 = EmailMessage()
+        msg_3['Subject'] = f"Error Logs for {today} and {tomorrow} Rules_Check."
+        msg_3['From'] = settings.email_address
+        msg_3['To'] = "michaeligbomezie@gmail.com"
+        msg_3.set_content(email_3)
+
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
             smtp.login(settings.email_address, settings.email_password)
             smtp.send_message(msg_1)
             smtp.send_message(msg_2)
+            smtp.send_message(msg_3)
     
     ml_predictor(today, today)
 

@@ -191,20 +191,20 @@ def rules_check():
                       'bothteams_notscore':[]
                      }
 
-        #Variables for the check
-        home_not_lose_count, home_not_lose_count1 = 0, 0
-        away_not_lose_count, away_not_lose_count1  = 0, 0
-        atleast_one_home_count, atleast_one_home_count1  = 0, 0
-        atleast_one_away_count, atleast_one_away_count1  = 0, 0
-        twoormoregoals_total_count, twoormoregoals_total_count1  = 0, 0
-        lessthan4goals_total_count, lessthan4goals_total_count1  = 0, 0
-        bothteams_score_count, bothteams_score_count1  = 0, 0
-        bothteams_notscore_count, bothteams_notscore_count1  = 0, 0
-
-        threshold = 0.85
+        
 
         #Function for checking all the rule and updating the dictionary to be printed.
         for i in range(prediction.shape[0]):
+
+            #Variables for the check
+            home_not_lose_count, home_not_lose_count1 = 0, 0
+            away_not_lose_count, away_not_lose_count1  = 0, 0
+            atleast_one_home_count, atleast_one_home_count1  = 0, 0
+            atleast_one_away_count, atleast_one_away_count1  = 0, 0
+            twoormoregoals_total_count, twoormoregoals_total_count1  = 0, 0
+            lessthan4goals_total_count, lessthan4goals_total_count1  = 0, 0
+            bothteams_score_count, bothteams_score_count1  = 0, 0
+            bothteams_notscore_count, bothteams_notscore_count1  = 0, 0
 
             for column in col_of_prediction:
                 if 'NoneType' not in str(type(list(prediction[column])[0])):
@@ -239,6 +239,12 @@ def rules_check():
                         if (float(score[0]) > 1) | (float(score[1]) > 1):
                             bothteams_notscore_count1  += 1
 
+            #Conditional threshold
+            if home_not_lose_count <= 5:
+                threshold = 0.70
+            else:
+                threshold = 0.85
+            
             #Checks for which of the matches exceed the threshold
             if (1 - (home_not_lose_count1/home_not_lose_count)) >= threshold:
                 rules_list['home_not_lose'].append('True')

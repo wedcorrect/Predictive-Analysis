@@ -115,6 +115,7 @@ def rulecheck_loader(dataset):
         innerdetail_analysis JSONB,
         home_not_lose VARCHAR,
         away_not_lose VARCHAR,
+        home_and_away_not_draw VARCHAR,
         atleast_one_home VARCHAR,
         atleast_one_away VARCHAR,
         twoormoregoals_total VARCHAR,
@@ -186,7 +187,7 @@ def rules_check():
 #             col_of_prediction = ['home_score_patterns', 'away_score_patterns', 'h2h_score_patterns', 'ref_predictions']
 
         #Rules Check dictionary to be printed along with other predictions
-        rules_list = {'home_not_lose':[],'away_not_lose':[],'atleast_one_home':[],'atleast_one_away':[],
+        rules_list = {'home_not_lose':[],'away_not_lose':[],'home_and_away_not_draw':[],'atleast_one_home':[],'atleast_one_away':[],
                       'twoormoregoals_total':[],'lessthan4goals_total':[],'bothteams_score':[],
                       'bothteams_notscore':[]
                      }
@@ -199,6 +200,7 @@ def rules_check():
             #Variables for the check
             home_not_lose_count, home_not_lose_count1 = 0, 0
             away_not_lose_count, away_not_lose_count1  = 0, 0
+            home_and_away_not_draw_count, home_and_away_not_draw_count1  = 0, 0
             atleast_one_home_count, atleast_one_home_count1  = 0, 0
             atleast_one_away_count, atleast_one_away_count1  = 0, 0
             twoormoregoals_total_count, twoormoregoals_total_count1  = 0, 0
@@ -215,6 +217,7 @@ def rules_check():
 
                         home_not_lose_count += 1
                         away_not_lose_count  += 1
+                        home_and_away_not_draw_count += 1
                         atleast_one_home_count  += 1
                         atleast_one_away_count  += 1
                         twoormoregoals_total_count  += 1
@@ -226,6 +229,8 @@ def rules_check():
                             home_not_lose_count1 +=1
                         if (float(score[1]) < float(score [0])):
                             away_not_lose_count1  += 1
+                        if (float(score[1]) == float(score [0])):
+                            home_and_away_not_draw_count1  += 1
                         if (float(score[0]) < 1):
                             atleast_one_home_count1  += 1
                         if (float(score[1]) < 1):
@@ -254,6 +259,10 @@ def rules_check():
                 rules_list['away_not_lose'].append('True')
             else:
                 rules_list['away_not_lose'].append('False')
+            if (1 - (home_and_away_not_draw_count1/home_and_away_not_draw_count)) >= threshold:
+                rules_list['home_and_away_not_draw'].append('True')
+            else:
+                rules_list['home_and_away_not_draw'].append('False')
             if (1 - (atleast_one_home_count1/atleast_one_home_count)) >= threshold:
                 rules_list['atleast_one_home'].append('True')
             else:
@@ -292,7 +301,7 @@ def rules_check():
             prediction[column] = prediction[column].apply(json.dumps)
 
         cond_check = []
-        temp_df = prediction[['home_not_lose','away_not_lose','atleast_one_home','atleast_one_away','twoormoregoals_total','lessthan4goals_total','bothteams_score','bothteams_notscore']]
+        temp_df = prediction[['home_not_lose','away_not_lose','home_and_away_not_draw','atleast_one_home','atleast_one_away','twoormoregoals_total','lessthan4goals_total','bothteams_score','bothteams_notscore']]
         for i in range(temp_df.shape[0]):
             check = list(temp_df.iloc[i,:])
             if 'True' in check:

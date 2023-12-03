@@ -45,12 +45,14 @@ def main():
         msg_1.set_content(email_1)
 
         #Concatenating the prediction for client's update.
-        email_2 = f"Predictions per League for {today} and {tomorrow}.\n\n"
+        email_2 = f"Predictions per League for {today} and {tomorrow}.\nNote: These prediction counts don't include referee predictions.\n\n"
         for item in list(pred_count.keys()):
-            if item == list(pred_count.keys())[-1]:
-                email_2 = email_2 + f"{item}: {pred_count[item]}\n\n"
+            if len(pred_count[item]) > 1:
+                email_2 = email_2 + f"{pred_count[item][0]}\n"
+                for entries in pred_count[item][1:]:
+                    email_2 = email_2 + f"    {entries}\n"
             else:
-                email_2 = email_2 + f"{item}: {pred_count[item]}\n"
+                email_2 = email_2 + f"{pred_count[item][0]}\n"
         
         #Sends error message to Email for recording or review
         msg_2 = EmailMessage()

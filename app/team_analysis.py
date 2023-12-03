@@ -682,6 +682,27 @@ def filter_pred(dataset):
     return dataset_2
 
 
+def pred_counter(filtered_dataset, threshold):
+        '''This function calculates the number of predictions per league and 
+        also records matches with less than 5 prediction'''
+        
+        pred_threshold = threshold
+        leagues_list = list(set(list(filtered_dataset['league']))) #Get list of leagues with prediction
+        predcount_dict = {} #dictionay to be returned is created
+        for league in leagues_list: #Loops through the list of leagues and count predicitons
+            predcount_dict[league] = []
+            temp_df = filtered_dataset[filtered_dataset['league'] == league]
+            predcount_dict[league].append(f"{league}: {temp_df.shape[0]}")
+            for i in range(temp_df.shape[0]): #For each match in a league the number of prediction are counted and checked against a threshold.
+                temp_list = list(temp_df.iloc[i,:])
+                count = 0
+                for index in [12,13,14]:
+                    count = count + len(list(json.loads(temp_list[index]).keys()))
+                if count <= pred_threshold: #If number of predictions is leass than threshold, match is recorded
+                    predcount_dict[league].append(f"{temp_list[0]}:{temp_list[1]} - {temp_list[2]}; Prediction: {count}")
+        return predcount_dict
+
+
 def teamdata_loader(dataset):
     '''Extracting the data from the dataframe to load into the database multiple rows at a time'''
 
@@ -776,7 +797,10 @@ def team_analysis_flow(today, tomorrow):
     except Exception as e:
         except_messgs[f"(Datatype Transformation)"] = f"{type(e).__name__}: {e}" #Catches and Records Error
     
-    pred_diction = dict(Counter(list(filtered_dataset['league'])))
+    #pred_diction = dict(Counter(list(filtered_dataset['league'])))
+    
+    #This function calculates the number of predictions per league and also records matches with less than 5 prediction
+    pred_diction = pred_counter(filtered_dataset, 5)
     for key in list(pred_diction.keys()):
         pred_count[key] = pred_diction[key]
     
